@@ -30,10 +30,9 @@ Desenvolvimento de uma aplicação interativa conectada a um Banco de Dados Rela
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **Linguagem Principal:** Python 3.x
-* **Framework Web:** Django / Flask *(Ajuste conforme o framework usado)*
-* **Banco de Dados:** PostgreSQL / MySQL / SQLite *(Ajuste conforme o SGBD usado)*
-* **Front-end:** HTML5, CSS3, JavaScript
+* **Linguagem Principal:** Python 
+* **Banco de Dados:** MySQL
+* **Front-end:** HTML5 & CSS
 * **Versionamento:** Git & GitHub
 
 ---
