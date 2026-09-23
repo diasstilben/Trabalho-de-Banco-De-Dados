@@ -8,7 +8,7 @@ Repositório dedicado ao desenvolvimento da apresentação técnica e da aplica�
 * **João Pedro**
 * **Pablo Borges**
 * **João Dias**
-
+ 
 ---
 
 ## 🎯 Escopo do Trabalho
