@@ -5,9 +5,9 @@ Repositório dedicado ao desenvolvimento da apresentação técnica e da aplica�
 ---
 
 ## 👥 Integrantes (Grupo G5)
-* **João Pedro**
-* **Pablo Borges**
-* **João Dias**
+* **João Pedro Cabral**
+* **Pablo Mattos Borges**
+* **João Dias Stilben Teixeira**
  
 ---
 
