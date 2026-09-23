@@ -42,4 +42,4 @@ Desenvolvimento de uma aplicação interativa conectada a um Banco de Dados Rela
 1. **Clonar o repositório:**
    ```bash
    git clone [https://github.com/diasstilben/Trabalho-de-Banco-De-Dados](https://github.com/diasstilben/Trabalho-de-Banco-De-Dados.git)
-   cd Banco-De-Dados
+   cd Trabalho-Banco-De-Dados
