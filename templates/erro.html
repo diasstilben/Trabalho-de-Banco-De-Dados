@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Erro{% endblock %}
+
+{% block conteudo %}
+    <section class="pagina pagina-erro">
+        <div class="erro-caixa">
+            <span class="erro-icone">⚠️</span>
+            <h1>Ops! Algo deu errado.</h1>
+            <p>{{ mensagem }}</p>
+            <p class="erro-dica">
+                Dicas:<br>
+                • O MySQL/MariaDB está em execução? <code>sudo systemctl start mysql</code><br>
+                • O banco <strong>HOSPITAL</strong> foi criado? <code>mysql -u root < hospital.sql</code><br>
+                • As credenciais do arquivo <code>.env</code> estão corretas?
+            </p>
+            <a href="{{ url_for('index') }}" class="botao">Voltar ao início</a>
+        </div>
+    </section>
+{% endblock %}

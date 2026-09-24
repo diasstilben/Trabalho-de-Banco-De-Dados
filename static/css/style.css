@@ -1,0 +1,364 @@
+/* ==========================================================================
+   style.css — Visual do Sistema Hospital
+   Paleta: azul hospitalar + tons neutros claros
+   ========================================================================== */
+
+:root {
+    --azul-escuro: #0f4c81;
+    --azul: #1b6ca8;
+    --azul-claro: #3fa0e0;
+    --cinza-fundo: #f4f7fa;
+    --cinza-borda: #dde4ec;
+    --texto: #22303d;
+    --verde: #2e9e5b;
+    --amarelo: #d98e04;
+    --vermelho: #c0392b;
+}
+
+/* ---------- Reset básico ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: var(--cinza-fundo);
+    color: var(--texto);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Cabeçalho / menu ---------- */
+.cabecalho {
+    background: linear-gradient(90deg, var(--azul-escuro), var(--azul));
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cabecalho-conteudo {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-icone {
+    font-size: 1.4rem;
+}
+
+.menu-botao {
+    display: none;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.navegacao {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.navegacao a {
+    color: #e7f0fa;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.navegacao a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* ---------- Conteúdo principal ---------- */
+.conteudo {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 24px 20px;
+    flex: 1;
+}
+
+.pagina h1,
+.pagina-inicial h1 {
+    color: var(--azul-escuro);
+    font-size: 1.7rem;
+    margin-bottom: 6px;
+}
+
+.subtitulo {
+    color: #5b6b7b;
+    margin-bottom: 22px;
+}
+
+.badge {
+    background: var(--azul);
+    color: #fff;
+    font-size: 0.7rem;
+    vertical-align: middle;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+}
+
+/* ---------- Mensagens flash ---------- */
+.mensagens {
+    margin-bottom: 20px;
+}
+
+.mensagem {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.mensagem-sucesso { background: #e4f6ec; color: var(--verde); border: 1px solid var(--verde); }
+.mensagem-erro    { background: #fdeeec; color: var(--vermelho); border: 1px solid var(--vermelho); }
+.mensagem-aviso   { background: #fdf5e3; color: var(--amarelo); border: 1px solid var(--amarelo); }
+
+/* ---------- Cartões da página inicial ---------- */
+.cartoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+.cartao {
+    background: #fff;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 22px;
+    text-decoration: none;
+    color: var(--texto);
+    transition: transform 0.15s, box-shadow 0.15s;
+    border-top: 4px solid var(--azul);
+}
+
+.cartao:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 76, 129, 0.12);
+}
+
+.cartao-icone { font-size: 1.8rem; }
+.cartao h2 { margin: 10px 0 6px; font-size: 1.1rem; color: var(--azul-escuro); }
+.cartao p { font-size: 0.88rem; color: #5b6b7b; }
+
+/* ---------- Formulários ---------- */
+.formulario, .formulario-horizontal {
+    background: #fff;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 24px;
+}
+
+.formulario-horizontal {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.formulario-horizontal label {
+    font-weight: 600;
+    padding-bottom: 4px;
+    display: block;
+}
+
+.campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.campo { display: flex; flex-direction: column; }
+.campo-largo { grid-column: 1 / -1; }
+
+.campo label, .label-grupo {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--azul-escuro);
+}
+
+input[type="text"],
+input[type="date"],
+input[type="email"],
+select {
+    padding: 10px 12px;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #fff;
+    min-width: 0;
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--azul-claro);
+    border-color: var(--azul);
+}
+
+select { min-width: 260px; }
+
+.ajuda { font-size: 0.78rem; color: #8a99a8; margin-top: 4px; }
+
+.opcoes-radio {
+    display: flex;
+    gap: 18px;
+    padding: 10px 4px;
+}
+
+.opcoes-radio label { display: inline-flex; gap: 6px; font-weight: 400; }
+
+.acoes {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Botões ---------- */
+.botao {
+    background: var(--azul);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+}
+
+.botao:hover { background: var(--azul-escuro); }
+
+.botao-secundario {
+    background: #fff;
+    color: var(--azul);
+    border: 1px solid var(--azul);
+}
+
+.botao-secundario:hover { background: #eef5fb; }
+
+/* ---------- Tabela ---------- */
+.tabela-envelope {
+    background: #fff;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 18px;
+    overflow-x: auto;
+}
+
+.tabela-envelope h2 { font-size: 1.15rem; margin-bottom: 14px; color: var(--azul-escuro); }
+
+.total { color: #8a99a8; font-size: 0.9rem; font-weight: 400; }
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tabela th {
+    background: var(--azul);
+    color: #fff;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+}
+
+.tabela td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--cinza-borda);
+}
+
+.tabela tbody tr:hover { background: #f3f8fd; }
+
+.sem-dados {
+    text-align: center;
+    color: #8a99a8;
+    padding: 26px 0;
+}
+
+/* ---------- Página de erro ---------- */
+.pagina-erro .erro-caixa {
+    background: #fff;
+    border: 1px solid #f5c6c6;
+    border-left: 6px solid var(--vermelho);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 640px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.erro-icone { font-size: 2.4rem; }
+.erro-caixa h1 { color: var(--vermelho); margin: 10px 0; }
+.erro-caixa p { margin-bottom: 12px; line-height: 1.6; }
+.erro-dica { text-align: left; font-size: 0.9rem; color: #5b6b7b; }
+.erro-caixa code { background: #f0f2f5; padding: 2px 6px; border-radius: 4px; }
+
+.nota-query {
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: #5b6b7b;
+}
+
+.nota-query code { background: #eef2f6; padding: 2px 6px; border-radius: 4px; }
+
+/* ---------- Rodapé ---------- */
+.rodape {
+    background: var(--azul-escuro);
+    color: #c7d8e8;
+    text-align: center;
+    padding: 14px;
+    font-size: 0.85rem;
+}
+
+/* ---------- Responsivo (celular) ---------- */
+@media (max-width: 640px) {
+    .menu-botao { display: block; }
+
+    .navegacao {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .navegacao.aberto { display: flex; }
+
+    .formulario-horizontal select { width: 100%; }
+    .formulario-horizontal { align-items: stretch; }
+}

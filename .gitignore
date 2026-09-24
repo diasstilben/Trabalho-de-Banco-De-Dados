@@ -1,0 +1,11 @@
+# Arquivo .gitignore — lista de arquivos que NÃO devem ser versionados no GitHub
+
+# Ambiente virtual do Python
+.venv/
+
+# Arquivos compilados / cache do Python
+__pycache__/
+*.pyc
+
+# Arquivo de configuração local com credenciais (nunca subir para o GitHub)
+.env

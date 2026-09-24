@@ -1,0 +1,4 @@
+# Bibliotecas necessárias para rodar o projeto
+flask>=3.0
+pymysql>=1.1
+python-dotenv>=1.0

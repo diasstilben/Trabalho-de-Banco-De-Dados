@@ -147,14 +147,14 @@ CREATE TABLE alocamedico (
 
 CREATE TABLE status_leito(
     cod_status      INT(11) PRIMARY KEY,
-    desc            VARCHAR(20) NOT NULL,
-)
+    `desc`          VARCHAR(20) NOT NULL
+);
 
 INSERT INTO status_leito
-    VALUES(1,livre);
+    VALUES(1,'livre');
 
 INSERT INTO status_leito
-    VALUES(2,ocupado);
+    VALUES(2,'ocupado');
 
 CREATE TABLE leito (
     cod_leito       INT(11) PRIMARY KEY,

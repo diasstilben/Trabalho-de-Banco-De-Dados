@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Início{% endblock %}
+
+{% block conteudo %}
+    <section class="pagina-inicial">
+        <h1>Bem-vindo(a) ao Sistema Hospital</h1>
+        <p class="subtitulo">
+            Aplicação integrada ao banco de dados <strong>HOSPITAL</strong> (MySQL).
+            Escolha uma operação abaixo:
+        </p>
+
+        <!-- Cartões de navegação para cada operação do sistema -->
+        <div class="cartoes">
+            <a href="{{ url_for('consultar_pacientes') }}" class="cartao">
+                <span class="cartao-icone">🔎</span>
+                <h2>Consultar Pacientes</h2>
+                <p>SELECT — busca e listagem de pacientes (com filtro por nome).</p>
+            </a>
+
+            <a href="{{ url_for('cadastrar_paciente') }}" class="cartao">
+                <span class="cartao-icone">➕</span>
+                <h2>Cadastrar Paciente</h2>
+                <p>INSERT — grava um novo paciente no banco de dados.</p>
+            </a>
+
+            <a href="{{ url_for('atualizar_paciente') }}" class="cartao">
+                <span class="cartao-icone">✏️</span>
+                <h2>Atualizar Paciente</h2>
+                <p>UPDATE — edita os dados de um paciente existente.</p>
+            </a>
+        </div>
+    </section>
+{% endblock %}

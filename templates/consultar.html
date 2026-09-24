@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Consultar Pacientes{% endblock %}
+
+{% block conteudo %}
+    <section class="pagina">
+        <h1>🔎 Consultar Pacientes <span class="badge">SELECT</span></h1>
+        <p class="subtitulo">Busque pacientes pelo nome ou clique em <em>Listar todos</em>.</p>
+
+        <!-- Formulário de filtro: o mesmo formulário faz SELECT com o nome digitado -->
+        <form method="post" action="{{ url_for('consultar_pacientes') }}" class="formulario-horizontal">
+            <label for="nome">Nome do paciente:</label>
+            <input type="text" id="nome" name="nome" value="{{ filtro or '' }}"
+                   placeholder="Digite parte do nome..." autofocus>
+            <button type="submit" class="botao">Buscar</button>
+            <a href="{{ url_for('consultar_pacientes') }}" class="botao botao-secundario" id="botaoLimpar">Limpar</a>
+        </form>
+
+        <!-- Tabela com o resultado da consulta -->
+        <div class="tabela-envelope">
+            <h2>Resultado
+                {% if filtro %} — mostrando pacientes com "<strong>{{ filtro }}</strong>"{% endif %}
+                <span class="total">({{ pacientes|length }} paciente(s))</span>
+            </h2>
+
+            {% if pacientes %}
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>CPF</th>
+                            <th>Nascimento</th>
+                            <th>Sexo</th>
+                            <th>E-mail</th>
+                            <th>Plano</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- O Flask percorre cada paciente retornado pelo SELECT -->
+                        {% for p in pacientes %}
+                            <tr>
+                                <td>{{ p.cod_pac }}</td>
+                                <td><strong>{{ p.nome }}</strong></td>
+                                <td>{{ p.telefone or '—' }}</td>
+                                <td>{{ p.CPF or '—' }}</td>
+                                <td>{{ p.data_formatada }}</td>
+                                <td>{{ p.sexo_formatado }}</td>
+                                <td>{{ p.email or '—' }}</td>
+                                <td>{{ p.nome_plano or '—' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="sem-dados">Nenhum paciente encontrado{% if filtro %} com esse nome{% endif %}.</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

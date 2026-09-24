@@ -1,0 +1,658 @@
+================================================================================
+                 EXPLICAÇÃO COMPLETA DO PROJETO TrabalhoBD
+           Trabalho Teórico e Prático de Banco de Dados — Grupo G5
+================================================================================
+
+ÍNDICE
+--------------------------------------------------------------------------------
+1. Visão geral do trabalho
+2. Integrantes do grupo
+3. Escopo do trabalho (teoria e prática)
+4. Tecnologias utilizadas
+5. Estrutura do repositório (todos os arquivos e pastas)
+6. O banco de dados HOSPITAL (hospital.sql)
+7. Dados de demonstração (seed_dados.sql e seed_exemplos.sql)
+8. A camada de acesso ao banco (db.py)
+9. A aplicação web Flask (app.py)
+10. As páginas HTML (pasta templates/)
+11. O visual e o comportamento (static/css e static/js)
+12. Variáveis de ambiente (.env e .env.example)
+13. Como rodar o projeto passo a passo
+14. Funcionalidades e o que testar em cada página
+15. Fluxo de dados dentro da aplicação
+16. Tratamento de erros
+17. Validações implementadas
+18. Dicas para a apresentação
+
+
+================================================================================
+1. VISÃO GERAL DO TRABALHO
+================================================================================
+
+Este repositório é um trabalho da disciplina de BANCO DE DADOS e está dividido
+em duas partes complementares:
+
+  (1) PESQUISA TEÓRICA  — Estudo sobre Estruturas de Arquivos, Indexação e
+      Hashing (como o banco organiza e procura os dados no disco).
+
+  (2) APLICAÇÃO PRÁTICA  — Um site (sistema web) chamado "Sistema Hospital",
+      conectado a um banco de dados MySQL real, que demonstra na prática as
+      operações básicas de um SGBD relacional: SELECT, INSERT e UPDATE.
+
+O objetivo prático é mostrar o conteúdo da disciplina funcionando de verdade:
+os dados ficam armazenados em um banco relacional (MySQL) e o usuário
+interage com eles por meio de um navegador web.
+
+
+================================================================================
+2. INTEGRANTES DO GRUPO (Grupo G5)
+================================================================================
+
+  * João Pedro
+  * Pablo Borges
+  * João Dias
+
+
+================================================================================
+3. ESCOPO DO TRABALHO (TEORIA E PRÁTICA)
+================================================================================
+
+3.1. Pesquisa teórica: Estruturas de Arquivos, Indexação e Hashing
+--------------------------------------------------------------------
+Estudo aprofundado sobre a organização física dos dados no disco e técnicas de
+otimização de consultas usadas em SGBDs:
+
+  * ESTRUTURA DE ARQUIVOS
+    - Organização física dos dados (Heap = arquivo não ordenado, sem critério;
+      Arquivos Ordenados = arquivos com registros em ordem por uma chave).
+    - Alocação de registros em blocos/páginas no disco.
+
+  * INDEXAÇÃO
+    - Conceitos de índices PRIMÁRIOS (sobre a chave de ordenação), SECUNDÁRIOS,
+      DENSOS (um registro de índice para cada registro) e ESPARSOS (índice
+      "saltado" para alguns registros).
+    - Foco na estrutura e funcionamento das ÁRVORES B+ (B+ - Trees), usadas
+      pela maioria dos bancos para acelerar buscas, inserções e remoções.
+
+  * HASHING
+    - Mapeamento direto com acesso O(1) via função hash.
+    - Funções hash e tratamento de colisões.
+    - Comparação entre Hashing Dinâmico e Estruturas de Árvore.
+
+3.2. Aplicação prática: Formulário de Integração com Banco de Dados
+--------------------------------------------------------------------
+Desenvolvimento de uma aplicação interativa conectada a um banco de dados
+relacional, atendendo aos requisitos mínimos:
+
+  * CONSULTA DE DADOS (SELECT)
+    - Formulário interativo para busca dinâmica e exibição de registros.
+    - Página "Consultar Pacientes": lista pacientes e permite filtrar por nome.
+
+  * PERSISTÊNCIA DE DADOS (INSERT / UPDATE)
+    - Página "Cadastrar Paciente": INSERT de um novo registro.
+    - Página "Atualizar Paciente": UPDATE dos dados de um registro existente.
+
+
+================================================================================
+4. TECNOLOGIAS UTILIZADAS
+================================================================================
+
+  * Linguagem principal ....... Python 3.10+
+  * Framework web ............. Flask (>= 3.0)
+  * Banco de dados ............ MySQL / MariaDB
+  * Conector Python x MySQL ... PyMySQL (>= 1.1)
+  * Variáveis de ambiente ..... python-dotenv (>= 1.0)
+  * Front-end ................. HTML5, CSS3 e JavaScript (puro, sem framework)
+  * Templates ................. Jinja2 (motor de templates do Flask)
+  * Versionamento ............. Git & GitHub
+
+O arquivo requirements.txt declara as dependências mínimas:
+
+    flask>=3.0
+    pymysql>=1.1
+    python-dotenv>=1.0
+
+
+================================================================================
+5. ESTRUTURA DO REPOSITÓRIO (ARQUIVOS E PASTAS)
+================================================================================
+
+TrabalhoBD/
+├── .env.example          # Modelo de configuração da conexão com o MySQL
+├── .env                  # Configuração local com as credenciais (NÃO versionado)
+├── .gitignore            # Lista o que NÃO vai para o GitHub (.venv, .env...)
+├── README.md             # Apresentação geral do repositório
+├── COMO_RODAR.md         # Guia passo a passo de como rodar o projeto
+├── requirements.txt      # Dependências Python (Flask, PyMySQL, dotenv)
+├── hospital.sql          # Script que cria o banco HOSPITAL (24 tabelas)
+├── seed_dados.sql        # (Opcional) dados de demonstração básicos
+├── seed_exemplos.sql     # (Opcional) dados de demonstração mais completos
+├── app.py                # Aplicação Flask (rotas e lógica das páginas)
+├── db.py                 # Camada de acesso ao banco (todas as consultas SQL)
+├── templates/            # Páginas HTML (Jinja2):
+│   ├── base.html             # Layout base (cabeçalho, menu, rodapé)
+│   ├── index.html            # Página inicial (menu de cartões)
+│   ├── consultar.html        # Consultar Pacientes (SELECT com filtro)
+│   ├── cadastrar.html        # Cadastrar Paciente (INSERT)
+│   ├── atualizar.html        # Atualizar Paciente (UPDATE)
+│   └── erro.html             # Página de erro amigável
+└── static/               # Recursos estáticos (CSS e JS):
+    ├── css/style.css         # Folha de estilos visual
+    └── js/script.js          # Interatividade no navegador
+
+Observação: existem também as pastas .venv/ (ambiente virtual Python) e
+__pycache__/ (cache do interpretador), que NÃO fazem parte do projeto e não
+são versionadas (estão no .gitignore).
+
+
+================================================================================
+6. O BANCO DE DADOS HOSPITAL (hospital.sql)
+================================================================================
+
+O arquivo hospital.sql cria o banco de dados chamado HOSPITAL e todas as suas
+tabelas. Ao todo são 24 tabelas, modelando o funcionamento de um hospital:
+
+TABELAS E O QUE ELAS GUARDAM
+--------------------------------------------------------------------------------
+  pacieente                  Cadastro de pacientes (cod_pac é a chave).
+  alergia                    Tipos de alergia (ex.: Penicilina).
+  paciente_alergia           Relação N:N entre paciente e alergia.
+  plano_saude                Planos de saúde (ex.: Unimed, Amil).
+  paciente_plano             Relação N:N entre paciente e plano (com nº da
+                             carteirinha).
+  estado                     Situação genérica (1 = agendada, 2 = realizada,
+                             3 = nao realizada).
+  formacao                   Grau de formação dos médicos (Graduação, Residência...).
+  especialidade              Especialidades médicas (Cardiologia, Pediatria...).
+  medico                     Médicos (matr é a chave; depende de formacao e
+                             especialidade).
+  caso                       Casos clínicos (descrição e estágio).
+  corpo                      Partes do corpo relacionadas ao caso.
+  consulta                   Consultas (liga paciente, médico, caso, corpo e
+                             estado; cod_es padrão = 1).
+  tipo_exame                 Tipos de exame (Hemograma, Raio-X...).
+  examinar                   Exames feitos em uma consulta.
+  tipo_cirurgia              Tipos de cirurgia.
+  cirurgia                   Cirurgias vinculadas a uma consulta.
+  participacao               Papel do médico na cirurgia.
+  alocamedico                Escalação de médicos na cirurgia (N:N).
+  status_leito               Status do leito (1 = livre, 2 = ocupado).
+  leito                      Leitos do hospital (tipo e status).
+  internacao                 Internações (entrada, saída e motivo).
+  medicamento                Medicamentos do hospital.
+  prescricao                 Prescrições vinculadas a uma consulta.
+  prescricao_medicamento     Medicamentos de cada prescrição (N:N).
+
+PONTOS IMPORTANTES DO SCHEMA
+--------------------------------------------------------------------------------
+  * NENHUMA chave primária usa AUTO_INCREMENT. Por isso a aplicação precisa
+    calcular o próximo código na mão (a função obter_proximo_codigo() do db.py
+    busca o maior código existente e soma 1).
+
+  * As chaves estrangeiras (FOREIGN KEY) garantem a integridade referencial:
+    por exemplo, uma consulta só pode ser criada com um paciente e um médico
+    que realmente existam.
+
+  * O estado da tabela "estado" é reutilizado por consulta, examinar e
+    cirurgia (1 = agendada, 2 = realizada, 3 = nao realizada).
+
+  * O SQL possui alguns acentos tipográficos (ex.: "pacieente" na linha 4),
+    que são defeitos propositais/aceitos da modelagem original — o script
+    funciona normalmente no MySQL/MariaDB.
+
+COMO CRIAR O BANCO
+--------------------------------------------------------------------------------
+    mysql -u root -p < hospital.sql        # ou mysql -u root < hospital.sql
+
+Isso cria o banco HOSPITAL vazio. As tabelas principais (paciente, médico...)
+ficam SEM dados, justamente para o aluno popular depois com os scripts de seed.
+
+
+================================================================================
+7. DADOS DE DEMONSTRAÇÃO (seed_dados.sql e seed_exemplos.sql)
+================================================================================
+
+SÃO DOIS SCRIPTS OPCIONAIS que apenas fazem INSERTs. NÃO alteram a estrutura
+das tabelas e devem ser rodados SOMENTE DEPOIS do hospital.sql, com as tabelas
+vazias.
+
+7.1. seed_dados.sql
+-------------------
+Versão menor — popula:
+  * 3 formações, 4 especialidades, 2 planos, 3 alergias, 2 casos, 3 partes
+    do corpo, 2 tipos de exame, 1 tipo de cirurgia, 2 papéis, 2 medicamentos,
+    2 leitos.
+  * 3 médicos, 5 pacientes, vínculos paciente_plano, paciente_alergia,
+    3 consultas, exames, 1 cirurgia + equipe, prescrições e internações.
+
+7.2. seed_exemplos.sql
+----------------------
+Versão maior e mais completa — popula aproximadamente 10 médicos, 10 pacientes
+e todos os registros de apoio. É a versão recomendada para a demonstração em
+sala, pois deixa a tela com dados "de verdade".
+
+  * 10 médicos (com especialidades de Cardiologia a Ortopedia).
+  * 10 pacientes (com nomes, idades variadas, e-mails).
+  * 5 consultas já marcadas (estados agendada/realizada).
+  * Exames, cirurgias com equipe médica, prescrições e internações.
+
+COMO RODAR
+--------------------------------------------------------------------------------
+    mysql -u root -p < seed_exemplos.sql
+
+
+================================================================================
+8. A CAMADA DE ACESSO AO BANCO (db.py)
+================================================================================
+
+O db.py centraliza TODA a comunicação com o MySQL. As rotas do Flask chamam
+as funções aqui definidas — a lógica de banco nunca fica dentro do app.py.
+
+CONFIGURAÇÃO E CONEXÃO
+--------------------------------------------------------------------------------
+  * load_dotenv(): carrega as credenciais do arquivo .env.
+  * get_connection(): abre a conexão com o banco usando pymysql.connect(),
+    lendo as variáveis de ambiente (com valores padrão):
+      - MYSQL_HOST (localhost)     - MYSQL_USER (root)
+      - MYSQL_PORT (3306)          - MYSQL_PASSWORD (vazio)
+      - MYSQL_DATABASE (HOSPITAL)
+    Usa charset='utf8mb4' (suporte a acentos) e DictCursor (cada linha vira um
+    dicionário {coluna: valor}). Se a conexão falhar, levanta ConnectionError
+    com uma mensagem amigável.
+
+  * obter_proximo_codigo(tabela, coluna): calcula o próximo valor de chave
+    primária fazendo SELECT COALESCE(MAX(coluna), 0) + 1. Necessário porque o
+    schema não usa AUTO_INCREMENT.
+
+OPERAÇÕES DE SELECT (CONSULTA)
+--------------------------------------------------------------------------------
+  * listar_pacientes(filtro_nome=None):
+    SELECT com LEFT JOIN entre paciente, paciente_plano e plano_saude, para
+    mostrar também o plano de saúde de cada paciente. Se filtro_nome for
+    informado, adiciona "WHERE p.nome LIKE %s" (busca por partes do nome).
+
+  * buscar_paciente(cod_pac):
+    SELECT * da tabela paciente filtrado pela chave primária. Usado na página
+    de Atualizar para preencher o formulário com os dados atuais.
+
+OPERAÇÃO DE INSERT (GRAVAÇÃO)
+--------------------------------------------------------------------------------
+  * inserir_paciente(dados):
+    Gera o próximo cod_pac, faz INSERT na tabela paciente e chama
+    conexao.commit() para confirmar a gravação. Devolve o código gerado.
+    Campos vazios viram NULL.
+
+OPERAÇÃO DE UPDATE (ALTERAÇÃO)
+--------------------------------------------------------------------------------
+  * atualizar_paciente(cod_pac, dados):
+    UPDATE na tabela paciente com WHERE cod_pac = %s (a chave nunca muda).
+    Faz commit e devolve cursor.rowcount — ou seja, quantas linhas foram
+    de fato alteradas (se 0, o usuário não mudou nada).
+
+NOTA IMPORTANTE: todo acesso ao banco usa os "with" de contexto, que fecham
+conexão e cursor automaticamente. As SQLs com parâmetros usam placeholders
+"%s" e mandam os valores separados, o que evita injeção de SQL.
+
+
+================================================================================
+9. A APLICAÇÃO WEB FLASK (app.py)
+================================================================================
+
+O app.py cria a aplicação Flask, define o secret_key (usada para assinar as
+mensagens "flash") e "amarra" cada URL a uma função. As rotas são:
+
+  MÉTODO   URL                     FUNÇÃO                   OPERAÇÃO NO BANCO
+  ------   ---------------------   ---------------------    ----------------
+  GET      /                       index()                  nenhuma (menu)
+  GET/POST /consultar/pacientes    consultar_pacientes()    SELECT (com filtro)
+  GET/POST /cadastrar              cadastrar_paciente()     INSERT
+  GET/POST /atualizar              atualizar_paciente()     UPDATE (+SELECT)
+
+DETALHAMENTO DE CADA ROTA
+--------------------------------------------------------------------------------
+  * index():
+    Renderiza index.html (menu de navegação). Não acessa o banco.
+
+  * consultar_pacientes() [GET/POST]:
+    Pega o termo digitado (POST via form, ou GET via ?nome=...), chama
+    db.listar_pacientes() e, para cada resultado, monta data_formatada
+    (DD/MM/AAAA) e sexo_formatado (Masculino/Feminino). Falha de banco cai na
+    página de erro com status HTTP 500.
+
+  * cadastrar_paciente() [GET/POST]:
+    GET mostra o formulário vazio. POST lê os campos, VALIDA (nome
+    obrigatório, CPF com 11 números, sexo M ou F) e chama db.inserir_paciente().
+    Em caso de sucesso mostra mensagem flash e redireciona para a listagem de
+    pacientes. Erro de validação devolve o formulário preenchido; erro de
+    conexão mostra a página de erro.
+
+  * atualizar_paciente() [GET/POST]:
+    GET pode receber ?cod=X: lista os pacientes e, se X for um código válido,
+    busca o paciente e preenche o formulário de edição (convertendo a data
+    para o formato AAAA-MM-DD, exigido pelo <input type="date">).
+    POST recebe o cod_pac de um campo oculto (hidden), VALIDA os dados e
+    chama db.atualizar_paciente(). Mostra mensagem conforme o retorno
+    (linhas alteradas > 0 = sucesso; 0 = nada mudou).
+
+FUNÇÕES AUXILIARES
+--------------------------------------------------------------------------------
+  * validar_cpf(cpf): remove caracteres não numéricos; campo vazio é liberado;
+    se tiver valor tem que ter exatamente 11 dígitos; senão levanta ValueError.
+  * validar_sexo(sexo): vazio, "M" ou "F" (aceita minúsculas).
+  * formatar_data(data): converte AAAA-MM-DD (MySQL) em DD/MM/AAAA para exibir.
+  * formatar_data_para_edicao(data): converte para AAAA-MM-DD (formato do input
+    type="date").
+
+EXECUÇÃO
+--------------------------------------------------------------------------------
+    if __name__ == '__main__':
+        app.run(host='127.0.0.1', port=5000, debug=True)
+
+Roda o servidor local em http://127.0.0.1:5000. O debug=True ajuda no
+desenvolvimento (recarrega automático e mostra erros detalhados).
+
+
+================================================================================
+10. AS PÁGINAS HTML (PASTA TEMPLATES/)
+================================================================================
+
+Todas as páginas usam o Jinja2 (template engine do Flask) e "herdam" do
+base.html. A herança evita repetir cabeçalho/menu/rodapé em toda página.
+
+base.html
+--------------------------------------------------------------------------------
+  * Contém o <head>, o link para o style.css e a estrutura comum:
+      - Cabeçalho (header) com logo "Sistema Hospital" e o menu de navegação
+        (Início, Consultar Pacientes, Cadastrar Paciente, Atualizar Paciente).
+      - Área de mensagens flash: exibe automaticamente as mensagens de
+        sucesso, erro e aviso vindas do Flask (get_flashed_messages()).
+      - Rodapé com o nome do grupo.
+      - Carrega o script.js.
+  * Define dois blocos que as páginas filhas preenchem:
+      - {% block titulo %}  (título da aba)
+      - {% block conteudo %} (conteúdo da página)
+      - {% block scripts %} (JavaScript extra, opcional)
+
+index.html
+--------------------------------------------------------------------------------
+  Página inicial. Mostra "Bem-vindo(a) ao Sistema Hospital" e três cartões
+  clicáveis, um para cada operação, informando qual operação de banco cada uma
+  faz:
+      * Consultar Pacientes    → SELECT
+      * Cadastrar Paciente     → INSERT
+      * Atualizar Paciente     → UPDATE
+
+consultar.html (Consultar Pacientes)
+--------------------------------------------------------------------------------
+  * Formulário horizontal com campo "Nome do paciente" + botões Buscar e
+    Limpar.
+  * Tabela de resultado com colunas: Código, Nome, Telefone, CPF, Nascimento,
+    Sexo, E-mail e Plano (nome do plano vindo do LEFT JOIN).
+  * Mostra a quantidade de pacientes encontrados.
+  * Se não houver resultado, exibe mensagem "Nenhum paciente encontrado".
+
+cadastrar.html (Cadastrar Paciente)
+--------------------------------------------------------------------------------
+  * Formulário com os campos: Nome*, Telefone, CPF, Data de nascimento, Sexo
+    (radio M/F), Endereço e E-mail.
+  * Envia via POST para /cadastrar. Usa maxlength e required (validação HTML5).
+  * Preenche novamente os valores digitados caso haja erro de validação.
+
+atualizar.html (Atualizar Paciente)
+--------------------------------------------------------------------------------
+  * Etapa 1: menu suspenso (select) com todos os pacientes (código + nome).
+    Ao trocar a seleção, o JavaScript redireciona para /atualizar?cod=X.
+  * Etapa 2: formulário de edição com os dados atuais do paciente já
+    preenchidos (nome, telefone, CPF, data, sexo, endereço, e-mail).
+    O código fica em um campo oculto e não pode ser editado.
+  * Envia via POST para /atualizar.
+
+erro.html (Página de erro)
+--------------------------------------------------------------------------------
+  * Exibida quando acontece qualquer erro de conexão/consulta.
+  * Mostra a mensagem do erro e um passo a passo de possíveis causas:
+      - O MySQL/MariaDB está rodando?
+      - O banco HOSPITAL foi criado?
+      - As credenciais do .env estão corretas?
+  * Botão "Voltar ao início".
+
+
+================================================================================
+11. O VISUAL E O COMPORTAMENTO (static/)
+================================================================================
+
+11.1. static/css/style.css
+--------------------------------------------------------------------------------
+Define o visual estilo "hospitalar" (azul escuro + azul claro + tons neutros):
+  * Paleta via variáveis CSS (:root) — azul escuro #0f4c81, azul #1b6ca8 etc.
+  * Reset básico de margens/paddings.
+  * Cabeçalho fixo (position: sticky) com degradê azul.
+  * Menu responsivo com botão "☰" (escondido no desktop, visível no celular,
+    via @media max-width 640px).
+  * Cartões da página inicial com efeito de elevação no hover.
+  * Formulários com campos largos, selects, radios, botões (primário e
+    secundário).
+  * Tabelas estilizadas (cabeçalho azul, linha destacada no hover).
+  * Mensagens flash coloridas (sucesso/erro/aviso).
+  * Página de erro com caixa destacada.
+
+11.2. static/js/script.js
+--------------------------------------------------------------------------------
+JavaScript puro (sem bibliotecas) que implementa:
+  1) Menu responsivo: alterna a classe "aberto" para mostrar/ocultar o menu no
+     celular.
+  2) Auto-carregamento do formulário de Atualizar: quando o usuário troca o
+     paciente no select, redireciona para /atualizar?cod=... (sem precisar
+     clicar em "Carregar dados").
+  3) Limpeza do CPF enquanto digita: remove tudo que não for número
+     (regex /\D/g).
+  4) Confirmação antes de salvar alterações no formulário de UPDATE
+     (window.confirm).
+  5) Botão "Limpar" da busca de pacientes esvazia o campo nome (para listar
+     todos de novo).
+
+
+================================================================================
+12. VARIÁVEIS DE AMBIENTE (.env e .env.example)
+================================================================================
+
+A conexão com o banco NÃO tem os dados fixos no código: ficam em um arquivo
+.env (que está no .gitignore e nunca vai para o GitHub). Assim, cada
+integrante usa as próprias credenciais sem conflito.
+
+O .env.example é o modelo publicado:
+
+    MYSQL_HOST=localhost
+    MYSQL_PORT=3306
+    MYSQL_USER=root
+    MYSQL_PASSWORD=           # senha em branco = conexão sem senha
+    MYSQL_DATABASE=HOSPITAL
+
+Para usar: copie o modelo e edite, se preciso:
+    cp .env.example .env
+
+O db.py lê essas variáveis com os.getenv('NOME', 'valor_padrão') — se a
+variável não existir, assume o padrão indicado (localhost/3306/root/HOSPITAL).
+
+O .gitignore protege os seguintes itens:
+  * .venv/            (ambiente virtual)
+  * __pycache__/      (cache do Python)
+  * *.pyc
+  * .env              (segredos: senha do banco!)
+
+
+================================================================================
+13. COMO RODAR O PROJETO PASSO A PASSO
+================================================================================
+
+PRÉ-REQUISITOS
+--------------------------------------------------------------------------------
+  * Python 3.10+ instalado
+  * MySQL ou MariaDB rodando localmente
+  * Git (para clonar o repositório)
+
+PASSO 1 — Clonar o repositório
+--------------------------------------------------------------------------------
+    git clone https://github.com/diasstilben/Trabalho-de-Banco-De-Dados.git
+    cd Trabalho-de-Banco-De-Dados
+
+PASSO 2 — Criar o banco de dados HOSPITAL
+--------------------------------------------------------------------------------
+    mysql -u root -p < hospital.sql
+    # Se o usuário não tem senha: mysql -u root < hospital.sql
+
+  (Opcional mas recomendado) popular com dados de exemplo:
+    mysql -u root -p < seed_exemplos.sql
+
+PASSO 3 — Criar o ambiente virtual e instalar dependências
+--------------------------------------------------------------------------------
+    python3 -m venv .venv
+    source .venv/bin/activate        # Linux/Mac
+    # Windows: .venv\Scripts\activate
+
+    pip install -r requirements.txt
+
+PASSO 4 — Configurar o .env
+--------------------------------------------------------------------------------
+    cp .env.example .env
+    # edite, se necessário, as credenciais do MySQL (usuário/senha)
+
+PASSO 5 — Subir a aplicação
+--------------------------------------------------------------------------------
+    python app.py
+
+PASSO 6 — Acessar no navegador
+--------------------------------------------------------------------------------
+    http://127.0.0.1:5000
+
+PARAR A APLICAÇÃO
+--------------------------------------------------------------------------------
+    Ctrl + C no terminal onde o Flask está rodando.
+
+
+================================================================================
+14. FUNCIONALIDADES E O QUE TESTAR EM CADA PÁGINA
+================================================================================
+
+  PÁGINA                    OPERAÇÃO NO BANCO    O QUE FAZ / COMO TESTAR
+  ------------------------  -------------------  ---------------------------
+  Consultar Pacientes       SELECT               Lista todos; digitar um nome
+                                                 (ex.: "ana") filtra com LIKE.
+  Cadastrar Paciente        INSERT               Preencher o formulário e
+                                                 salvar; o novo paciente
+                                                 aparece na listagem com o
+                                                 código gerado.
+  Atualizar Paciente        UPDATE               Escolher um paciente na lista,
+                                                 editar dados e salvar; a
+                                                 mudança reflete na listagem.
+  (Qualquer página)         — mensagens flash    Aparecem avisos verdes
+                                                 (sucesso), vermelhos (erro) e
+                                                 amarelos (aviso).
+
+DEMONSTRAÇÃO DE TRATAMENTO DE ERRO
+--------------------------------------------------------------------------------
+  Desligue o MySQL e clique em "Consultar Pacientes": a aplicação exibe a
+  página de erro amigável (erro.html) com dicas de como resolver, em vez de
+  quebrar com uma mensagem feia.
+
+
+================================================================================
+15. FLUXO DE DADOS DENTRO DA APLICAÇÃO
+================================================================================
+
+O fluxo completo de uma operação é:
+
+  [Navegador]  →  [Flask (app.py)]  →  [db.py]  →  [MySQL]
+       ↑                                           │
+       └────────────── Página HTML (templates/ + static/) ←┘
+
+Exemplo prático — CADASTRAR PACIENTE:
+  1) Usuário abre /cadastrar  → GET → render_template('cadastrar.html').
+  2) Usuário preenche e envia o formulário → POST → app.py lê request.form.
+  3) app.py valida nome/CPF/sexo (funções validar_cpf e validar_sexo).
+  4) app.py chama db.inserir_paciente(dados).
+  5) db.py calcula o próximo código (MAX + 1), executa o INSERT e faz COMMIT,
+     devolvendo o código gerado.
+  6) app.py emite flash('Paciente cadastrado com sucesso! Código: X') e
+     redireciona para /consultar/pacientes.
+  7) A página Consultar Pacientes faz um SELECT e mostra o paciente recém
+     inserido.
+
+Exemplo prático — FILTRAR PACIENTES:
+  1) Usuário digita "ana" e clica em Buscar → POST com nome="ana".
+  2) app.py chama db.listar_pacientes(filtro_nome="ana").
+  3) db.py monta: SELECT ... WHERE p.nome LIKE %ana% (parâmetro no cursor).
+  4) O resultado volta como lista de dicionários; app.py formata data e sexo.
+  5) render_template('consultar.html', pacientes=..., filtro="ana") exibe a
+     tabela com os resultados.
+
+Exemplo prático — ATUALIZAR PACIENTE:
+  1) Abrir /atualizar lista os pacientes (SELECT).
+  2) Escolher o paciente (select + JS) → GET /atualizar?cod=2.
+  3) app.py chama db.buscar_paciente(2) para preencher o formulário.
+  4) Salvar alterações → POST com cod_pac oculto + campos novos.
+  5) db.atualizar_paciente(2, dados) executa o UPDATE e devolve rowcount.
+  6) Se rowcount > 0 → flash de sucesso; se 0 → flash de "nada alterado".
+
+
+================================================================================
+16. TRATAMENTO DE ERROS
+================================================================================
+
+  * Conexão com o banco: get_connection() captura pymysql.MySQLError e
+    relança como ConnectionError com mensagem clara. Todas as rotas capturam
+    ConnectionError e renderizam erro.html com código de status HTTP 500.
+
+  * Validações de formulário: as rotas de INSERT/UPDATE capturam ValueError
+    (lançado pelas funções validar_cpf/validar_sexo e pela checagem de campos
+    obrigatórios), mostram a mensagem via flash e re-apresentam o formulário
+    com os dados já preenchidos, para o usuário corrigir.
+
+  * Segurança: as SQLs usam sempre placeholders (%s) com os valores passados
+    separadamente ao cursor do PyMySQL — isso impede INJEÇÃO DE SQL. O
+    html do Jinja2 faz escape automático das variáveis exibidas, mitigando
+    XSS. A secret_key do Flask fica no código por ser um trabalho acadêmico
+    (em produção estaria no .env).
+
+
+================================================================================
+17. VALIDAÇÕES IMPLEMENTADAS
+================================================================================
+
+  FRONTEND (navegador, HTML/JS):
+    * Campos obrigatórios via atributo required (nome do paciente).
+    * maxlength limitando o tamanho (100 p/ nome, 13 p/ telefone, 11 p/ CPF...).
+    * CPF limpado automaticamente enquanto digita (remove pontos/traços).
+    * Confirmação (confirm) antes de salvar alterações.
+
+  BACKEND (servidor, Python):
+    * Nome obrigatório (não pode ser vazio).
+    * CPF: vazio permitido; se preenchido, deve ter exatamente 11 dígitos.
+    * Sexo: vazio, "M" ou "F" (aceita minúsculo e normaliza para maiúsculo).
+    * Código do paciente no UPDATE deve ser numérico.
+    * Validação repetida no servidor mesmo para quem mande requisição fora do
+      site (POST manual), garantindo que a aplicação não quebre.
+
+
+================================================================================
+18. DICAS PARA A APRESENTAÇÃO
+================================================================================
+
+1. Rode hospital.sql e seed_exemplos.sql para garantir dados na tela.
+   2. Abra "Consultar Pacientes" e filtre por um nome (ex.: "ana") para mostrar
+      o SELECT com LIKE.
+   3. Cadastre um novo paciente e mostre que ele aparece na listagem
+      (demonstra o INSERT na prática).
+   4. Atualize um paciente e mostre a mudança refletida na listagem
+      (demonstra o UPDATE na prática).
+   5. Para demonstrar o tratamento de erro: desligue o MySQL e clique em
+      "Consultar Pacientes" — aparece a página de erro amigável.
+   6. Relacione a prática com a teoria: explique que as chaves primárias
+      geradas na mão (MAX + 1) seriam índices únicos no SGBD e que o LIKE
+      poderia usar um ÍNDICE secundário/B+ para ficar mais rápido — ligando a
+      parte teórica à aplicação.
+
+
+================================================================================
+FIM DA EXPLICAÇÃO
+================================================================================

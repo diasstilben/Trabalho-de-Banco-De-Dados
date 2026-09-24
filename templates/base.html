@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Hospital{% endblock %} — HOSPITAL</title>
+    <!-- Folha de estilo principal da aplicação -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Cabeçalho / menu de navegação -->
+    <header class="cabecalho">
+        <div class="cabecalho-conteudo">
+            <a href="{{ url_for('index') }}" class="logo">
+                <span class="logo-icone">🏥</span>
+                <span>Sistema Hospital</span>
+            </a>
+            <button class="menu-botao" id="menuBotao" aria-label="Abrir menu">☰</button>
+            <nav class="navegacao" id="navegacao">
+                <a href="{{ url_for('index') }}">Início</a>
+                <a href="{{ url_for('consultar_pacientes') }}">Consultar Pacientes</a>
+                <a href="{{ url_for('cadastrar_paciente') }}">Cadastrar Paciente</a>
+                <a href="{{ url_for('atualizar_paciente') }}">Atualizar Paciente</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Área principal: exibe o conteúdo de cada página -->
+    <main class="conteudo">
+
+        <!-- Mensagens temporárias (sucesso / erro / aviso) enviadas com flash() -->
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                <div class="mensagens">
+                    {% for categoria, texto in mensagens %}
+                        <div class="mensagem mensagem-{{ categoria }}">{{ texto }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="rodape">
+        <p>Trabalho de Banco de Dados — Grupo G5 (João Pedro, Pablo Borges, João Dias)</p>
+    </footer>
+
+    <!-- JavaScript da aplicação -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
