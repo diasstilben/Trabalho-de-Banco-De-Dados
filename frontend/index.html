@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Hospital</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🏥 Sistema Hospital</h1>
+    <nav id="tabs">
+      <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
+      <button class="tab-btn" data-tab="medicos">Médicos</button>
+      <button class="tab-btn" data-tab="consultas">Consultas</button>
+      <button class="tab-btn" data-tab="planos">Planos de Saúde</button>
+      <button class="tab-btn" data-tab="especialidades">Especialidades</button>
+      <button class="tab-btn" data-tab="formacoes">Formações</button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="mensagem" class="mensagem" style="display:none;"></div>
+
+    <!-- PACIENTES -->
+    <section id="pacientes" class="tab-content active">
+      <h2>Pacientes</h2>
+      <form id="form-paciente">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="cod_pac" placeholder="Código" required>
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="text" name="telefone" placeholder="Telefone">
+        <input type="text" name="CPF" placeholder="CPF" maxlength="11">
+        <input type="date" name="data_nascimento">
+        <select name="sexo">
+          <option value="">Sexo</option>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
+        <input type="text" name="endereco" placeholder="Endereço">
+        <input type="email" name="email" placeholder="E-mail">
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('paciente')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Cód</th><th>Nome</th><th>Telefone</th><th>CPF</th><th>Nascimento</th><th>Sexo</th><th>Endereço</th><th>E-mail</th><th></th></tr></thead>
+        <tbody id="tabela-pacientes"></tbody>
+      </table>
+    </section>
+
+    <!-- MEDICOS -->
+    <section id="medicos" class="tab-content">
+      <h2>Médicos</h2>
+      <form id="form-medico">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="matr" placeholder="Matrícula" required>
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="text" name="telefone" placeholder="Telefone">
+        <input type="text" name="CPF" placeholder="CPF" maxlength="11">
+        <select name="cod_form" id="select-formacao"><option value="">Formação</option></select>
+        <select name="cod_esp" id="select-especialidade"><option value="">Especialidade</option></select>
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('medico')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Matr</th><th>Nome</th><th>Telefone</th><th>CPF</th><th>Formação</th><th>Especialidade</th><th></th></tr></thead>
+        <tbody id="tabela-medicos"></tbody>
+      </table>
+    </section>
+
+    <!-- CONSULTAS -->
+    <section id="consultas" class="tab-content">
+      <h2>Consultas</h2>
+      <form id="form-consulta">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="cod_consulta" placeholder="Código" required>
+        <select name="cod_pac" id="select-paciente" required><option value="">Paciente</option></select>
+        <select name="cod_med" id="select-medico" required><option value="">Médico</option></select>
+        <input type="date" name="data_consulta" required>
+        <select name="cod_es" id="select-estado"><option value="">Estado</option></select>
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('consulta')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Cód</th><th>Paciente</th><th>Médico</th><th>Data</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tabela-consultas"></tbody>
+      </table>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="planos" class="tab-content">
+      <h2>Planos de Saúde</h2>
+      <form id="form-plano">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="cod_plano" placeholder="Código" required>
+        <input type="text" name="nome_plano" placeholder="Nome do plano" required>
+        <input type="text" name="abrangencia" placeholder="Abrangência">
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('plano')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Cód</th><th>Nome do plano</th><th>Abrangência</th><th></th></tr></thead>
+        <tbody id="tabela-planos"></tbody>
+      </table>
+    </section>
+
+    <!-- ESPECIALIDADES -->
+    <section id="especialidades" class="tab-content">
+      <h2>Especialidades</h2>
+      <form id="form-especialidade">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="cod_esp" placeholder="Código" required>
+        <input type="text" name="especializacao" placeholder="Especialização" required>
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('especialidade')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Cód</th><th>Especialização</th><th></th></tr></thead>
+        <tbody id="tabela-especialidades"></tbody>
+      </table>
+    </section>
+
+    <!-- FORMACOES -->
+    <section id="formacoes" class="tab-content">
+      <h2>Formações</h2>
+      <form id="form-formacao">
+        <input type="hidden" name="modo" value="insert">
+        <input type="number" name="cod_form" placeholder="Código" required>
+        <input type="text" name="grau_formacao" placeholder="Grau de formação" required>
+        <div class="form-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" class="btn-cancelar" onclick="cancelarEdicao('formacao')">Cancelar edição</button>
+        </div>
+      </form>
+      <table>
+        <thead><tr><th>Cód</th><th>Grau de formação</th><th></th></tr></thead>
+        <tbody id="tabela-formacoes"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

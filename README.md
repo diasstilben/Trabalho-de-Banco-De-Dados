@@ -1,45 +1,64 @@
-# 📚 Trabalho Teórico e Prático de Banco de Dados — Grupo G5
+# Sistema Hospital — Frontend + Backend
 
-Repositório dedicado ao desenvolvimento da apresentação técnica e da aplicação prática para a disciplina de **Banco de Dados**.
+Aplicação simples para o banco `HOSPITAL` (Hospital.sql), com CRUD (SELECT, INSERT, UPDATE) para:
+paciente, médico, consulta, plano_saude, especialidade e formação.
 
----
+## Estrutura
+```
+hospital-app/
+├── backend/          # API em Node.js + Express + MySQL
+│   ├── server.js
+│   ├── db.js
+│   └── routes/
+└── frontend/         # HTML + CSS + JS puro (SPA simples)
+    ├── index.html
+    ├── style.css
+    └── script.js
+```
 
-## 👥 Integrantes (Grupo G5)
-* **João Pedro Cabral**
-* **Pablo Mattos Borges**
-* **João Dias Stilben Teixeira**
- 
----
+## 1. Banco de dados
+Crie o banco executando o script `Hospital.sql` no MySQL:
+```
+mysql -u root -p < Hospital.sql
+```
 
-## 🎯 Escopo do Trabalho
+## 2. Backend
+```
+cd backend
+npm install
+```
+Ajuste as credenciais do banco em `db.js` (ou defina as variáveis de ambiente
+`DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `PORT`).
 
-Este repositório está dividido em duas partes fundamentais exigidas na avaliação:
+Inicie o servidor:
+```
+npm start
+```
+A API sobe em `http://localhost:3000`. Endpoints disponíveis:
 
-### 1. Pesquisa Teórica: Estruturas de Arquivos, Indexação e Hashing
-Estudo aprofundado sobre a organização física de dados no disco e técnicas de otimização de consultas em SGBDs:
-* **Estrutura de Arquivos:** Organização física de dados (Heap vs. Arquivos Ordenados) e alocação em blocos.
-* **Indexação:** Conceitos de índices primários, secundários, densos e esparsos, com foco na estrutura e funcionamento de **Árvores B+** ($B^+$-Trees).
-* **Hashing:** Mapeamento direto $O(1)$, funções hash, tratamento de colisões e comparação entre Hashing Dinâmico e Estruturas de Árvore.
+| Método | Rota                        | Ação   |
+|--------|------------------------------|--------|
+| GET    | /api/pacientes               | SELECT |
+| POST   | /api/pacientes                | INSERT |
+| PUT    | /api/pacientes/:cod_pac       | UPDATE |
+| GET    | /api/medicos                  | SELECT |
+| POST   | /api/medicos                  | INSERT |
+| PUT    | /api/medicos/:matr             | UPDATE |
+| GET    | /api/consultas                | SELECT |
+| POST   | /api/consultas                | INSERT |
+| PUT    | /api/consultas/:cod_consulta   | UPDATE |
+| GET/POST/PUT | /api/planos, /api/especialidades, /api/formacoes | idem |
+| GET    | /api/estados                  | SELECT (tabela fixa) |
 
-### 2. Aplicação Prática: Formulário de Integração com Banco de Dados
-Desenvolvimento de uma aplicação interativa conectada a um Banco de Dados Relacional, atendendo aos seguintes Requisitos Mínimos:
-* **Consulta de Dados (`SELECT`):** Formulário interativo para busca dinâmica e exibição de registros cadastrados.
-* **Persistência de Dados (`INSERT` / `UPDATE`):** Funcionalidade para manipulação de registros diretamente pela interface do usuário.
+## 3. Frontend
+Basta abrir `frontend/index.html` no navegador (ou servir a pasta com
+`npx serve frontend`, por exemplo). Ele já aponta para `http://localhost:3000/api`
+(constante `API` no topo de `script.js` — ajuste se o backend rodar em outra porta/host).
 
----
-
-## 🛠️ Tecnologias Utilizadas
-
-* **Linguagem Principal:** Python 
-* **Banco de Dados:** MySQL
-* **Front-end:** HTML5 & CSS
-* **Versionamento:** Git & GitHub
-
----
-
-## 🚀 Como Executar o Projeto Localmente
-
-1. **Clonar o repositório:**
-   ```bash
-   git clone [https://github.com/diasstilben/Trabalho-de-Banco-De-Dados](https://github.com/diasstilben/Trabalho-de-Banco-De-Dados.git)
-   cd Trabalho-Banco-De-Dados
+## Observações
+- Os formulários fazem **INSERT** por padrão; clicar em "Editar" numa linha da
+  tabela troca o formulário para modo **UPDATE** (a chave primária fica travada).
+- As buscas listadas usam **SELECT** com `JOIN` em médicos e consultas, trazendo
+  nome do paciente, nome do médico, formação, especialidade e descrição do estado
+  em vez de apenas os códigos.
+- CORS está liberado no backend (`cors()`) para simplificar o teste local.
