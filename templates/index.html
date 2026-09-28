@@ -2,254 +2,125 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Hospitalar - Gestão Completa</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; color: #333; }
-        h1 { text-align: center; color: #222; margin-bottom: 20px; }
-        
-        /* Estilo das Abas */
-        .tabs { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        .tab-btn { padding: 10px 15px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .tab-btn.active { background: #007bff; color: white; }
-        
-        /* Conteúdo das Abas */
-        .tab-content { display: none; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 1000px; margin: 0 auto; }
-        .tab-content.active { display: block; }
-        
-        h2 { color: #007bff; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-        h3 { margin-top: 25px; color: #444; }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        .form-busca { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-end; }
-        
-        label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        
-        button { padding: 10px 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { opacity: 0.9; }
-        .btn-busca { background: #007bff; height: 36px; }
-        
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 13px; }
-        th { background-color: #007bff; color: white; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Pacientes</title>
+    <!-- Adicionando Bootstrap para deixar o layout profissional rapidinho -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-    <h1>Sistema de Gestão Hospitalar</h1>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🏥 Sistema de Gestão de Pacientes</h2>
 
-    <!-- Menu de Abas -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'tab-paciente')">Pacientes</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-medico')">Médicos</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-plano')">Planos de Saúde</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-especialidade')">Especialidades</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-formacao')">Formações</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-estado')">Estados</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-consulta')">Consultas</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-pacienteesplano')">Paciente x Plano</button>
-    </div>
+    <div class="row">
+        <!-- LADO ESQUERDO: Formulário de Cadastro -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Novo Paciente</h5>
+                </div>
+                <div class="card-body">
+                    <!-- O action aponta pra rota do Python e o method é POST -->
+                    <form action="/cadastrar/paciente" method="POST">
+                        
+                        <div class="mb-2">
+                            <label>Código do Paciente *</label>
+                            <input type="number" class="form-control" name="cod_pac" required>
+                        </div>
 
-    <!-- 1. ABA PACIENTES -->
-    <div id="tab-paciente" class="tab-content active">
-        <h2>Gestão de Pacientes</h2>
-        <h3>Cadastrar Paciente</h3>
-        <form action="/cadastrar/paciente" method="POST">
-            <div class="form-grid">
-                <div><label>Código:</label><input type="number" name="cod_pac" required></div>
-                <div><label>Nome:</label><input type="text" name="nome" required></div>
-                <div><label>Telefone:</label><input type="text" name="telefone"></div>
-                <div><label>CPF:</label><input type="text" name="CPF" maxlength="11"></div>
-                <div><label>Data Nasc.:</label><input type="date" name="data_nascimento"></div>
-                <div><label>Sexo:</label><input type="text" name="sexo" maxlength="1"></div>
-                <div><label>Endereço:</label><input type="text" name="endereco"></div>
-                <div><label>E-mail:</label><input type="email" name="email"></div>
+                        <div class="mb-2">
+                            <label>Nome Completo *</label>
+                            <input type="text" class="form-control" name="nome" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>CPF *</label>
+                            <input type="text" class="form-control" name="CPF" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Telefone</label>
+                            <input type="text" class="form-control" name="telefone">
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Data de Nascimento</label>
+                            <input type="date" class="form-control" name="data_nascimento">
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Sexo</label>
+                            <select class="form-control" name="sexo">
+                                <option value="">Selecione...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Endereço</label>
+                            <input type="text" class="form-control" name="endereco">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>E-mail</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+                    </form>
+                </div>
             </div>
-            <button type="submit">Salvar Paciente</button>
-        </form>
+        </div>
 
-        <h3>Consultar / Filtrar Pacientes</h3>
-        <form action="/" method="GET" class="form-busca">
-            <div style="flex: 1;"><label>Pesquisar por Nome:</label><input type="text" name="b_paciente" value="{{ b_paciente }}" placeholder="Digite o nome..."></div>
-            <button type="submit" class="btn-busca">Buscar</button>
-        </form>
-        <table>
-            <tr><th>Cód</th><th>Nome</th><th>Telefone</th><th>CPF</th><th>Nasc.</th><th>Sexo</th><th>Endereço</th><th>E-mail</th></tr>
-            {% for p in pacientes %}
-            <tr><td>{{ p.cod_pac }}</td><td>{{ p.nome }}</td><td>{{ p.telefone }}</td><td>{{ p.CPF }}</td><td>{{ p.data_nascimento }}</td><td>{{ p.sexo }}</td><td>{{ p.endereco }}</td><td>{{ p.email }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 2. ABA MÉDICOS -->
-    <div id="tab-medico" class="tab-content">
-        <h2>Gestão de Médicos</h2>
-        <h3>Cadastrar Médico</h3>
-        <form action="/cadastrar/medico" method="POST">
-            <div class="form-grid">
-                <div><label>Matrícula:</label><input type="number" name="matr" required></div>
-                <div><label>Nome:</label><input type="text" name="nome" required></div>
-                <div><label>Telefone:</label><input type="text" name="telefone"></div>
-                <div><label>CPF:</label><input type="text" name="CPF" maxlength="11"></div>
-                <div><label>Cód. Formação:</label><input type="number" name="cod_form"></div>
-                <div><label>Cód. Especialidade:</label><input type="number" name="cod_esp"></div>
-            </div>
-            <button type="submit">Salvar Médico</button>
-        </form>
-
-        <h3>Consultar / Filtrar Médicos</h3>
-        <form action="/" method="GET" class="form-busca">
-            <div style="flex: 1;"><label>Pesquisar por Nome:</label><input type="text" name="b_medico" value="{{ b_medico }}" placeholder="Digite o nome..."></div>
-            <button type="submit" class="btn-busca">Buscar</button>
-        </form>
-        <table>
-            <tr><th>Matrícula</th><th>Nome</th><th>Telefone</th><th>CPF</th><th>Formação</th><th>Especialidade</th></tr>
-            {% for m in medicos %}
-            <tr><td>{{ m.matr }}</td><td>{{ m.nome }}</td><td>{{ m.telefone }}</td><td>{{ m.CPF }}</td><td>{{ m.cod_form }}</td><td>{{ m.cod_esp }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 3. ABA PLANOS DE SAÚDE -->
-    <div id="tab-plano" class="tab-content">
-        <h2>Planos de Saúde</h2>
-        <h3>Cadastrar Plano</h3>
-        <form action="/cadastrar/plano" method="POST">
-            <div class="form-grid">
-                <div><label>Cód. Plano:</label><input type="number" name="cod_plano" required></div>
-                <div><label>Nome do Plano:</label><input type="text" name="nome_plano" required></div>
-                <div><label>Abrangência:</label><input type="text" name="abrangencia"></div>
-            </div>
-            <button type="submit">Salvar Plano</button>
-        </form>
-
-        <h3>Consultar Planos</h3>
-        <form action="/" method="GET" class="form-busca">
-            <div style="flex: 1;"><label>Pesquisar por Nome do Plano:</label><input type="text" name="b_plano" value="{{ b_plano }}" placeholder="Digite o plano..."></div>
-            <button type="submit" class="btn-busca">Buscar</button>
-        </form>
-        <table>
-            <tr><th>Código</th><th>Nome do Plano</th><th>Abrangência</th></tr>
-            {% for p in planos %}
-            <tr><td>{{ p.cod_plano }}</td><td>{{ p.nome_plano }}</td><td>{{ p.abrangencia }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 4. ABA ESPECIALIDADES -->
-    <div id="tab-especialidade" class="tab-content">
-        <h2>Especialidades</h2>
-        <h3>Cadastrar Especialidade</h3>
-        <form action="/cadastrar/especialidade" method="POST">
-            <div class="form-grid">
-                <div><label>Cód. Esp:</label><input type="number" name="cod_esp" required></div>
-                <div><label>Especialização:</label><input type="text" name="especializacao" required></div>
-            </div>
-            <button type="submit">Salvar Especialidade</button>
-        </form>
-        <h3>Consultar Especialidades</h3>
-        <table>
-            <tr><th>Código</th><th>Especialização</th></tr>
-            {% for e in especialidades %}
-            <tr><td>{{ e.cod_esp }}</td><td>{{ e.especializacao }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 5. ABA FORMAÇÕES -->
-    <div id="tab-formacao" class="tab-content">
-        <h2>Formações</h2>
-        <h3>Cadastrar Formação</h3>
-        <form action="/cadastrar/formacao" method="POST">
-            <div class="form-grid">
-                <div><label>Cód. Form:</label><input type="number" name="cod_form" required></div>
-                <div><label>Grau de Formação:</label><input type="text" name="grau_formacao" required></div>
-            </div>
-            <button type="submit">Salvar Formação</button>
-        </form>
-        <h3>Consultar Formações</h3>
-        <table>
-            <tr><th>Código</th><th>Grau de Formação</th></tr>
-            {% for f in formacoes %}
-            <tr><td>{{ f.cod_form }}</td><td>{{ f.grau_formacao }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 6. ABA ESTADOS -->
-    <div id="tab-estado" class="tab-content">
-        <h2>Estados de Consulta</h2>
-        <h3>Listagem de Estados</h3>
-        <table>
-            <tr><th>Código</th><th>Descrição</th></tr>
-            {% for est in estados %}
-            <tr><td>{{ est.cod_es }}</td><td>{{ est.descr }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 7. ABA CONSULTAS -->
-    <div id="tab-consulta" class="tab-content">
-        <h2>Consultas</h2>
-        <h3>Cadastrar Consulta</h3>
-        <form action="/cadastrar/consulta" method="POST">
-            <div class="form-grid">
-                <div><label>Cód. Consulta:</label><input type="number" name="cod_consulta" required></div>
-                <div><label>Cód. Paciente:</label><input type="number" name="cod_pac" required></div>
-                <div><label>Matr. Médico:</label><input type="number" name="cod_med" required></div>
-                <div><label>Data da Consulta:</label><input type="date" name="data_consulta"></div>
-                <div><label>Cód. Estado:</label><input type="number" name="cod_es" value="1"></div>
-            </div>
-            <button type="submit">Salvar Consulta</button>
-        </form>
-
-        <h3>Consultar Consultas</h3>
-        <form action="/" method="GET" class="form-busca">
-            <div style="flex: 1;"><label>Filtrar por Cód. Paciente:</label><input type="number" name="b_consulta" value="{{ b_consulta }}" placeholder="Código do paciente..."></div>
-            <button type="submit" class="btn-busca">Buscar</button>
-        </form>
-        <table>
-            <tr><th>Cód. Consulta</th><th>Cód. Paciente</th><th>Matr. Médico</th><th>Data</th><th>Cód. Estado</th></tr>
-            {% for c in consultas %}
-            <tr><td>{{ c.cod_consulta }}</td><td>{{ c.cod_pac }}</td><td>{{ c.cod_med }}</td><td>{{ c.data_consulta }}</td><td>{{ c.cod_es }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- 8. ABA PACIENTE x PLANO -->
-    <div id="tab-pacienteesplano" class="tab-content">
-        <h2>Vínculo Paciente x Plano de Saúde</h2>
-        <h3>Cadastrar Vínculo</h3>
-        <form action="/cadastrar/paciente_plano" method="POST">
-            <div class="form-grid">
-                <div><label>Cód. Paciente:</label><input type="number" name="cod_pac" required></div>
-                <div><label>Cód. Plano:</label><input type="number" name="cod_plano" required></div>
-                <div><label>Nº Carteirinha:</label><input type="text" name="numero_carteirinha"></div>
-            </div>
-            <button type="submit">Vincular Plano</button>
-        </form>
-        <h3>Consultar Vínculos</h3>
-        <table>
-            <tr><th>Cód. Paciente</th><th>Cód. Plano</th><th>Nº Carteirinha</th></tr>
-            {% for pp in paciente_planos %}
-            <tr><td>{{ pp.cod_pac }}</td><td>{{ pp.cod_plano }}</td><td>{{ pp.numero_carteirinha }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <!-- Script JavaScript para gerenciar a troca de abas -->
-    <script>
-        function openTab(evt, tabName) {
-            let contents = document.getElementsByClassName("tab-content");
-            for (let c of contents) c.classList.remove("active");
+        <!-- LADO DIREITO: Tabela e Pesquisa -->
+        <div class="col-md-8">
             
-            let buttons = document.getElementsByClassName("tab-btn");
-            for (let b of buttons) b.classList.remove("active");
-            
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-        }
-    </script>
+            <!-- Barra de Pesquisa -->
+            <form action="/" method="GET" class="d-flex mb-3 shadow-sm">
+                <input type="text" class="form-control me-2" name="b_paciente" placeholder="Pesquisar paciente por nome..." value="{{ b_paciente }}">
+                <button type="submit" class="btn btn-secondary">Buscar</button>
+                <a href="/" class="btn btn-outline-secondary ms-2">Limpar</a>
+            </form>
+
+            <!-- Tabela de Dados -->
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Cód</th>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Telefone</th>
+                                    <th>Data Nasc.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- O Jinja2 faz o loop na lista que o Python enviou -->
+                                {% for pac in pacientes %}
+                                <tr>
+                                    <td>{{ pac.cod_pac }}</td>
+                                    <td>{{ pac.nome }}</td>
+                                    <td>{{ pac.CPF }}</td>
+                                    <td>{{ pac.telefone }}</td>
+                                    <td>{{ pac.data_nascimento }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-3">Nenhum paciente encontrado.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
