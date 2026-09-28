@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão do Hospital</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        h1, h2 { color: #333; }
+        .container { display: flex; gap: 40px; }
+        form { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 300px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        button:hover { background: #218838; }
+        table { border-collapse: collapse; width: 100%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+
+    <h1>Gestão do Hospital</h1>
+    
+    <div class="container">
+        <!-- Formulário para o INSERT -->
+        <div>
+            <h2>Cadastrar Paciente</h2>
+            <form action="/cadastrar" method="POST">
+                <label for="cod_pac">Código do Paciente:</label>
+                <input type="number" id="cod_pac" name="cod_pac" required>
+                
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone">
+                
+                <label for="cpf">CPF (11 dígitos):</label>
+                <input type="text" id="cpf" name="cpf" maxlength="11">
+                
+                <button type="submit">Salvar Paciente</button>
+            </form>
+        </div>
+
+        <!-- Tabela para o SELECT -->
+        <div>
+            <h2>Pacientes Registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>CPF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pacientes %}
+                    <tr>
+                        <td>{{ p.cod_pac }}</td>
+                        <td>{{ p.nome }}</td>
+                        <td>{{ p.telefone }}</td>
+                        <td>{{ p.CPF }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">Nenhum paciente encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
