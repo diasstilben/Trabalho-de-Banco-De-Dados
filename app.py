@@ -1,28 +1,27 @@
 from flask import Flask, render_template, request, redirect
-import mysql.connector
+import mysql.connector #conexao entre o servidor e o codigo
 
 app = Flask(__name__)
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",
+        host="localhost", #servidor rodando na propria maquina
         user="root",
         password="",
-        database="HOSPITAL"
+        database="HOSPITAL" #base de dados
     )
 
-# --- ROTA PRINCIPAL (SELECTs com suporte a formulários de busca para cada tabela) ---
 @app.route('/')
 def index():
-    # Captura termos de busca específicos de cada aba (se houver)
-    b_paciente = request.args.get('b_paciente', '')
-    b_medico = request.args.get('b_medico', '')
-    b_plano = request.args.get('b_plano', '')
-    b_especialidade = request.args.get('b_especialidade', '')
-    b_formacao = request.args.get('b_formacao', '')
-    b_consulta = request.args.get('b_consulta', '')
+    
+    b_paciente = request.args.get('b_paciente', '') #coleta oque o usario escreveu na barra de pesquisa
+    b_medico = request.args.get('b_medico', '') #''
+    b_plano = request.args.get('b_plano', '') #''
+    b_especialidade = request.args.get('b_especialidade', '') #''
+    b_formacao = request.args.get('b_formacao', '') #''
+    b_consulta = request.args.get('b_consulta', '') #''
 
-    conn = get_db_connection()
+    conn = get_db_connection() #fazer a conexao
     cursor = conn.cursor(dictionary=True)
     
     # 1. Pacientes (SELECT com filtro por nome)
@@ -75,10 +74,10 @@ def index():
     cursor.execute("SELECT * FROM paciente_plano")
     paciente_planos = cursor.fetchall()
     
-    cursor.close()
+    cursor.close() #fechar a conexao com o XAMPP 
     conn.close()
     
-    return render_template('index.html', 
+    return render_template('index.html', #função para atualizar o HTML
                            pacientes=pacientes, b_paciente=b_paciente,
                            medicos=medicos, b_medico=b_medico,
                            planos=planos, b_plano=b_plano,
@@ -88,18 +87,26 @@ def index():
                            consultas=consultas, b_consulta=b_consulta,
                            paciente_planos=paciente_planos)
 
-# --- ROTAS DE INSERT PADRONIZADAS PARA CADA TABELA ---
+
 
 @app.route('/cadastrar/paciente', methods=['POST'])
 def cadastrar_paciente():
+    
     conn = get_db_connection()
-    cursor = conn.cursor()
-    sql = "INSERT INTO paciente (cod_pac, nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (request.form['cod_pac'], request.form['nome'], request.form['telefone'], request.form['CPF'], request.form['data_nascimento'] or None, request.form['sexo'], request.form['endereco'], request.form['email'])
-    cursor.execute(sql, val)
+    cursor = conn.cursor() #abre a conexao e prepara o cursor (igual o SELECT)
+    
+    # Prepara o comando SQL de inserção (INSERT).
+    # O uso dos '%s' (placeholders) serve como uma blindagem de segurança:
+    # eles garantem que os dados digitados sejam tratados apenas como texto,
+    # evitando ataques de invasão ao banco de dados (SQL Injection).
+    sql = "INSERT INTO paciente (cod_pac, nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" 
+    
+    val = (request.form['cod_pac'], request.form['nome'], request.form['telefone'], request.form['CPF'], request.form['data_nascimento'] or None, request.form['sexo'], request.form['endereco'], request.form['email']) #ler oq o usario digitou nos campos 
+    
+    cursor.execute(sql, val) #leva para o sql
     conn.commit()
     cursor.close()
-    conn.close()
+    conn.close() #fecha a conexao com o sql
     return redirect('/?tab=paciente')
 
 @app.route('/cadastrar/medico', methods=['POST'])
