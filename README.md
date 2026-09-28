@@ -8,9 +8,9 @@ Este projeto cumpre o requisito de possuir formulários que acedem à base de da
 **UERJ - IPRJ** (Universidade do Estado do Rio de Janeiro - Instituto Politécnico do Rio de Janeiro)
 
 ## 👥 Integrantes do Grupo (G5)
-* **João Dias**[cite: 2]
-* **João Pedro**[cite: 2]
-* **Pablo**[cite: 2]
+* **João Dias**
+* **João Pedro**
+* **Pablo**
 
 ---
 
