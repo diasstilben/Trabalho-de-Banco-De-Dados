@@ -53,11 +53,11 @@ def cadastrar_paciente():
     cursor = conn.cursor()
     
     # SQL blindado contra Injeção SQL
-    sql = "INSERT INTO paciente (cod_pac, nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" # O MySQL é forçado a tratar qualquer coisa que venha nessa variavél estritamente como texto puro(literal). 
+    sql = "INSERT INTO paciente (nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES ( %s, %s, %s, %s, %s, %s, %s)" # O MySQL é forçado a tratar qualquer coisa que venha nessa variavél estritamente como texto puro(literal). 
     
     # Os nomes aqui combinam EXATAMENTE com os 'name' do HTML
     val = (
-        request.form['cod_pac'], 
+        
         request.form['nome'], 
         request.form['telefone'], 
         request.form['CPF'], 
