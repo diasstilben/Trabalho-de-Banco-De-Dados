@@ -22,7 +22,7 @@ def get_db_connection():
 # ==============================================================================
 # 2. ROTA PRINCIPAL (Buscar e Listar Pacientes)
 # ==============================================================================
-@app.route('/')
+@app.route('/') # Responsável por fazer a ponte entre a URL e o Código em Python.
 def index():
     # Pega o que foi digitado na barra de pesquisa (se houver)
     b_paciente = request.args.get('b_paciente', '')
@@ -53,7 +53,7 @@ def cadastrar_paciente():
     cursor = conn.cursor()
     
     # SQL blindado contra Injeção SQL
-    sql = "INSERT INTO paciente (cod_pac, nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO paciente (cod_pac, nome, telefone, CPF, data_nascimento, sexo, endereco, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" # O MySQL é forçado a tratar qualquer coisa que venha nessa variavél estritamente como texto puro(literal). 
     
     # Os nomes aqui combinam EXATAMENTE com os 'name' do HTML
     val = (
